@@ -8,8 +8,19 @@ const app = express()
 
 const conn = require('./db/conn')
 
+//Models
+const Tought = require('./models/Tought')
+const User = require('./models/User')
+
+//Routes
+const toughtsRoutes = require('./routes/toughtsRoutes')
+const authRoutes = require('./routes/authRoutes')
+//controller
+const ToughtController = require('./controllers/ToughtController')
+
+
 //template engine
-app.engine('handlebars', engine)
+app.engine('handlebars', engine()) 
 app.set('view engine', 'handlebars')
 
 //receber resposta body
@@ -55,6 +66,13 @@ app.use((req, res, next) => {
 
     next()
 })
+
+//Routes
+app.use('/toughts', toughtsRoutes)
+app.use('/', authRoutes)
+
+app.get('/', ToughtController.showToughts)
+
 
 conn.sync().then(() => {
     app.listen(3000)
